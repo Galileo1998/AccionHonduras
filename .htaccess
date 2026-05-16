@@ -1,0 +1,15 @@
+# 1. Desactivar la navegación de directorios (Nadie puede ver tus carpetas por dentro)
+Options -Indexes
+
+# 2. Proteger archivos de configuración
+<FilesMatch "^(config\.php|\.env|\.htaccess)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. Prevenir la inyección de scripts (Cabeceras de Seguridad)
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header always append X-Frame-Options SAMEORIGIN
+    Header set X-Content-Type-Options nosniff
+</IfModule>

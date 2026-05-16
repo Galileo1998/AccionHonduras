@@ -1,0 +1,5 @@
+# Prevenir ejecución de scripts en la carpeta de subidas
+<FilesMatch "\.(php|php5|php4|php3|phtml|pl|py|jsp|asp|htm|shtml|sh|cgi)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
