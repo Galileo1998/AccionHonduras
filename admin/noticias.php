@@ -70,26 +70,11 @@ $noticias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <i class="fa-solid fa-layer-group" style="color: #46B094; font-size: 1.4rem;"></i>
-            <span style="font-weight: 600; font-size: 1.1rem;">AH Admin Pro</span>
-        </div>
-        <div class="sidebar-content">
-            <a href="index.php" class="nav-link"><i class="fa-solid fa-file-lines" style="width:20px;"></i> Páginas</a>
-            <a href="noticias.php" class="nav-link active"><i class="fa-solid fa-newspaper" style="width:20px;"></i> Noticias</a>
-                        <a href="socios.php" class="nav-link" style="color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-handshake" style="width:20px;">
 
-                </i> Socios y Proyectos
-            </a>
-            <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0;"></div>
-            <a href="apariencia.php" class="nav-link"><i class="fa-solid fa-bars" style="width:20px;"></i> Menú</a>
-            <a href="configuracion.php" class="nav-link"><i class="fa-solid fa-gears" style="width:20px;"></i> Configuración</a>
-        </div>
-        <div style="padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <a href="logout.php" style="color: #ef4444; text-decoration: none; font-size: 0.9rem;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salir</a>
-        </div>
+        <?php include 'sidebar.php'; ?>
+
     </aside>
+
 
     <main class="main">
         <div class="page-header">

@@ -66,31 +66,7 @@ if (!$page) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page['title']); ?> | Acción Honduras</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* CSS Reset y Configuración Global (Sticky Footer) */
-        * { box-sizing: border-box; }
-        body { 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: #f8fafc; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; /* Obliga al body a medir al menos el 100% de la pantalla */
-        }
-        main { 
-            flex-grow: 1; /* Hace que el contenido principal empuje el footer hacia abajo */
-        }
-    </style>
-</head>
+
 <body>
 
     <?php 
