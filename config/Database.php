@@ -32,7 +32,11 @@ if (session_status() === PHP_SESSION_ACTIVE || session_status() === PHP_SESSION_
     // Content Security Policy (CSP): La regla suprema. 
     // Le dice al navegador que solo cargue recursos de tu dominio, de Google Fonts, FontAwesome y Unsplash.
     // Bloquea cualquier script de un servidor hacker externo.
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com;");
+// Content Security Policy (CSP) ACTUALIZADA: 
+    // Ahora incluye permisos para los mapas de Leaflet (unpkg.com) y sus recursos visuales (cartocdn, githubusercontent).
+// Content Security Policy (CSP) FINAL:
+// Content Security Policy (CSP) FINAL:
+    header("Content-Security-Policy: default-src 'self'; connect-src 'self' https://raw.githubusercontent.com wss://*.kaspersky-labs.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://*.unsplash.com https://*.cartocdn.com https://raw.githubusercontent.com https://cdnjs.cloudflare.com https://unpkg.com;");
 }
 // ========================================================================
 // 2. CLASE DE BASE DE DATOS PROTEGIDA

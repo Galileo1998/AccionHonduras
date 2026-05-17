@@ -77,6 +77,11 @@ $noticias = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="sidebar-content">
             <a href="index.php" class="nav-link"><i class="fa-solid fa-file-lines" style="width:20px;"></i> Páginas</a>
             <a href="noticias.php" class="nav-link active"><i class="fa-solid fa-newspaper" style="width:20px;"></i> Noticias</a>
+                        <a href="socios.php" class="nav-link" style="color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-handshake" style="width:20px;">
+
+                </i> Socios y Proyectos
+            </a>
             <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0;"></div>
             <a href="apariencia.php" class="nav-link"><i class="fa-solid fa-bars" style="width:20px;"></i> Menú</a>
             <a href="configuracion.php" class="nav-link"><i class="fa-solid fa-gears" style="width:20px;"></i> Configuración</a>

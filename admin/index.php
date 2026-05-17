@@ -59,7 +59,11 @@ $pages = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="noticias.php" style="color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-newspaper" style="width: 20px;"></i> Noticias
             </a>
+            <a href="socios.php" class="nav-link" style="color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-handshake" style="width:20px;">
 
+                </i> Socios y Proyectos
+            </a>
             <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
             
             <a href="apariencia.php" style="color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px;">

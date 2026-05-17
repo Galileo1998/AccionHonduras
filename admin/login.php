@@ -1,13 +1,14 @@
 <?php
 session_start();
-require_once '../config/Database.php';
-require_once '../classes/Auth.php';
 
-// Si ya está logueado, lo mandamos directo al panel
+// Si ya tiene sesión, lo enviamos directo al panel (evita que vea el login de nuevo)
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header("Location: index.php");
     exit;
 }
+
+require_once '../config/Database.php';
+require_once '../classes/Auth.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -17,128 +18,63 @@ $msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // 1. PRIMER FILTRO: ¿Está bloqueado por fuerza bruta?
+    // 1. Verificamos si el Firewall Anti-Fuerza Bruta lo bloqueó
     if ($auth->isIpBlocked()) {
-        $msg = "<div class='alert error'>Por motivos de seguridad, tu acceso ha sido bloqueado temporalmente por demasiados intentos fallidos. Intenta nuevamente en 15 minutos.</div>";
+        $msg = "<div style='background:#fee2e2; color:#991b1b; padding:15px; border-radius:6px; margin-bottom:20px; text-align:center; font-weight:600; border: 1px solid #f87171;'>Has fallado demasiadas veces. Por seguridad, tu acceso está bloqueado por 15 minutos.</div>";
     } else {
-        // Si no está bloqueado, procedemos normal
         $email = trim($_POST['email']);
         $password = $_POST['password'];
 
-        // (Aquí iría tu código normal que verifica si el correo existe en la base de datos)
-        $query = "SELECT id, name, password, role FROM users WHERE email = :email LIMIT 1";
-        $stmt = $db->prepare($query);
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Verificamos la contraseña
-        if ($user && password_verify($password, $user['password'])) {
-            // ¡LOGIN EXITOSO!
-            
-            // 2. Limpiamos cualquier registro de fallos anteriores
-            $auth->resetLoginAttempts();
-            
-            // ... (Creas la sesión $_SESSION['user_id'] etc y rediriges a index.php) ...
-            
+        // 2. Intentamos iniciar sesión con la clase Auth que arreglamos
+        if ($auth->login($email, $password)) {
+            // ¡ÉXITO! Lo mandamos al panel principal
+            header("Location: index.php");
+            exit;
         } else {
-            // ¡LOGIN FALLIDO!
-            
-            // 3. Registramos el fallo para sumar a la cuenta
-            $auth->recordFailedLogin($email);
-            
-            $msg = "<div class='alert error'>Correo o contraseña incorrectos.</div>";
+            // FALLO: Credenciales incorrectas
+            $msg = "<div style='background:#fee2e2; color:#991b1b; padding:15px; border-radius:6px; margin-bottom:20px; text-align:center; font-weight:600; border: 1px solid #f87171;'>Correo o contraseña incorrectos.</div>";
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso CMS - Acción Honduras</title>
+    <title>Acceso al Sistema | Acción Honduras</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-box {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-        }
-        .login-box h2 {
-            color: #466094; /* ah-primary-blue */
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; /* Para que el padding no desborde */
-        }
-        .btn-login {
-            background-color: #34859b; /* ah-secondary-teal */
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        .btn-login:hover {
-            background-color: #266b7d;
-        }
-        .error {
-            color: red;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 350px; border: 1px solid #e2e8f0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #475569; font-weight: 600; font-size: 0.9rem; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
+        .form-control:focus { outline: none; border-color: #34859B; box-shadow: 0 0 0 3px rgba(52, 133, 155, 0.2); }
+        .btn-login { width: 100%; background: #34859B; color: white; padding: 14px; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .btn-login:hover { background: #2c7285; transform: translateY(-2px); }
     </style>
 </head>
 <body>
-
-<div class="login-box">
-    <h2>Acceso al Sistema</h2>
-    
-    <?php if(!empty($error_msg)): ?>
-        <div class="error"><?php echo $error_msg; ?></div>
-    <?php endif; ?>
-
-    <form method="POST" action="login.php">
-        <div class="form-group">
-            <label>Correo Electrónico:</label>
-            <input type="email" name="email" required placeholder="admin@accionhonduras.org">
+    <div class="login-card">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: #1e293b; margin: 0; font-size: 1.8rem;">AH Admin Pro</h2>
+            <p style="color: #64748b; margin-top: 5px; font-size: 0.9rem;">Acceso seguro al sistema</p>
         </div>
-        <div class="form-group">
-            <label>Contraseña:</label>
-            <input type="password" name="password" required placeholder="Tu contraseña">
-        </div>
-        <button type="submit" class="btn-login">Entrar</button>
-    </form>
-</div>
+        
+        <?php echo $msg; ?>
 
+        <form method="POST" action="">
+            <div class="form-group">
+                <label>Correo Electrónico:</label>
+                <input type="email" name="email" class="form-control" placeholder="usuario@accionhonduras.org" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn-login">Ingresar de forma segura</button>
+        </form>
+    </div>
 </body>
 </html>

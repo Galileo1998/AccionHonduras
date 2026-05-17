@@ -2,15 +2,25 @@
 class Auth {
     private $conn;
     private $table_name = "users";
+    
+    // 1. Declaramos la propiedad para guardar la conexión
+    private $db;
 
-    public function __construct($db) {
-        $this->conn = $db;
+    // 2. CONSTRUCTOR: Recibe la conexión a la base de datos cuando hacemos "new Auth($db)"
+    public function __construct($db_connection = null) {
+        $this->db = $db_connection;
     }
 
-    public function login($email, $password) {
+    // =======================================================
+    // FUNCIONES DE SESIÓN NORMALES
+    // =======================================================
+    // ... (Aquí siguen las funciones que ya tienes: generateCSRF, checkCSRF, isIpBlocked, etc.)
+public function login($email, $password) {
         // Consulta preparada para evitar SQL Injection
         $query = "SELECT id, name, password, role FROM " . $this->table_name . " WHERE email = :email LIMIT 1";
-        $stmt = $this->conn->prepare($query);
+        
+        // 🛠️ CORRECCIÓN AQUÍ: Usamos $this->db
+        $stmt = $this->db->prepare($query);
         
         // Limpiar el email
         $email = htmlspecialchars(strip_tags($email));
@@ -30,8 +40,17 @@ class Auth {
                 $_SESSION['user_role'] = $row['role'];
                 $_SESSION['logged_in'] = true;
                 
+                // 🛠️ Limpiamos los intentos fallidos al tener éxito
+                $this->resetLoginAttempts();
+                
                 return true;
+            } else {
+                // 🛠️ Registramos el fallo si la contraseña es incorrecta
+                $this->recordFailedLogin($email);
             }
+        } else {
+            // 🛠️ Registramos el fallo si el correo no existe
+            $this->recordFailedLogin($email);
         }
         return false;
     }
